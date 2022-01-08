@@ -17,16 +17,27 @@ titles.setAttribute("style", "display:flex; justify-content:center;")
 wholecontainer.appendChild(titles);
 wholecontainer.appendChild(drawingpad);
 
-drawingpad.appendChild(wholeBox);
-const buttons = document.createElement("button");
+const buttons = document.createElement("div");
 drawingpad.appendChild(buttons);
-buttons.textContent="CLEAR";
-drawingpad.setAttribute("style", "display:flex; justify-content:center;");
-buttons.style.alignSelf="flex-start";
+drawingpad.appendChild(wholeBox);
 
+const clearButton = document.createElement("button");
+clearButton.textContent="CLEAR";
+buttons.appendChild(clearButton);
+const darkButton = document.createElement("button");
+darkButton.textContent="Dark";
+buttons.appendChild(darkButton);
 const rainbow = document.createElement("button");
 rainbow.textContent="Rainbow";
-drawingpad.appendChild(rainbow);
+buttons.appendChild(rainbow);
+const lighten = document.createElement("button");
+lighten.textContent="Light to Dark";
+buttons.appendChild(lighten);
+
+drawingpad.setAttribute("style", "display:flex; justify-content:center;");
+buttons.style.display="flex";
+buttons.style.flexDirection="column";
+
 
 wholecontainer.setAttribute("style", "display:flex; flex-direction:column;");
 wholeBox.setAttribute("style", "display:flex; flex-direction:column; -webkit-box-shadow: 0 0 10px #888888;");
@@ -38,12 +49,19 @@ wholeBox.style.height= `${wholeBoxHeight}px`;
 
 bodys.appendChild(wholecontainer);
 
-function colors(e)
+function darkColor(e)
 {
     if(e.buttons === 1 || e.buttons === 3)
     {
-        this.style.backgroundColor="black";
+        this.style.backgroundColor="rgb(0,0,0)";
     }
+}
+function colors(e)
+{
+    const cleanbox = document.querySelectorAll(".drawingbox div");
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", lightendark));
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));
+    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", darkColor));
 }
 
 const userGrid = parseInt(prompt("Grid Size? "));
@@ -59,6 +77,7 @@ for (let i = 0; i < userGrid; i++)
         const boxes = document.createElement("div");
         boxes.style.width=`${wholeBoxWidth/userGrid}px`;
         boxes.style.height=`${(wholeBoxHeight/userGrid)}px`;
+        boxes.style.backgroundColor="rgb(255,255,255)";
         //boxes.addEventListener('mousemove', colors);
         boxcontainer.appendChild(boxes);
     }
@@ -69,22 +88,52 @@ for (let i = 0; i < userGrid; i++)
 function erased(e)
 {
     const cleanbox = document.querySelectorAll(".drawingbox div");
-    cleanbox.forEach(boxes=>boxes.style.backgroundColor="white");
+    cleanbox.forEach(boxes=>boxes.style.backgroundColor="rgb(255,255,255)");
+    cleanbox.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true)));
 
+}
+function rainbows(e)
+{
+    if(e.buttons === 1 || e.buttons === 3)
+    {
+        this.style.backgroundColor= `rgb(${Math.floor(Math.random() * 1000)%256}, ${Math.floor(Math.random() * 1000)%256}, ${Math.floor(Math.random() * 1000)%256})`;
+    }
 }
 function rainbowcolor(e)
 {
-    function rainbows(e)
-    {
-        if(e.buttons === 1 || e.buttons === 3)
-        {
-            const randomColor = Math.floor(Math.random() * 1000)%256;
-            this.style.backgroundColor= `rgb(${Math.floor(Math.random() * 1000)%256}, ${Math.floor(Math.random() * 1000)%256}, ${Math.floor(Math.random() * 1000)%256})`;
-        }
-    }
     const cleanbox = document.querySelectorAll(".drawingbox div");
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", lightendark));
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", rainbows));
+
 }
-buttons.addEventListener("click", erased);
+
+function lightendark(e)
+{
+    if(e.buttons === 1 || e.buttons === 3)
+    {
+        let backgroundchange = this.style.backgroundColor;
+        let updatecolor = backgroundchange.substring(4, backgroundchange.length-1).replace(/ /g, '').split(',');
+        let r = updatecolor[0];
+        let b = updatecolor[1];
+        let g = updatecolor[2];
+        this.style.backgroundColor= `rgb(${r-25.5},${b-25.5},${g-25.5})`;
+    }
+}
+function lightens(e)
+{
+    const cleanbox = document.querySelectorAll(".drawingbox div");
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));
+    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", lightendark));
+}
+
+clearButton.addEventListener("click", erased);
+
+darkButton.addEventListener("click", colors);
 
 rainbow.addEventListener("click", rainbowcolor);
+
+lighten.addEventListener("click", lightens);
+
+
