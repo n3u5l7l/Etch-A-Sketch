@@ -33,6 +33,9 @@ buttons.appendChild(rainbow);
 const lighten = document.createElement("button");
 lighten.textContent="Light to Dark";
 buttons.appendChild(lighten);
+const eraser = document.createElement("button");
+eraser.textContent="Eraser";
+buttons.appendChild(eraser);
 
 drawingpad.setAttribute("style", "display:flex; justify-content:center;");
 buttons.style.display="flex";
@@ -128,7 +131,6 @@ function lightendark(e)
         let b = updatecolor[1];
         let g = updatecolor[2];
         this.style.backgroundColor= `rgb(${r-25.5},${b-25.5},${g-25.5})`;
-        console.log("UGH");
     }
 }
 function lightens(e)
@@ -142,6 +144,21 @@ function lightens(e)
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", lightendark));
 }
 
+function erasethings(e)
+{
+    if (e.buttons===1 || e.buttons===3)
+    {
+        this.style.backgroundColor="rgb(255,255,255)";
+    }
+}
+function erasing(e)
+{
+    const cleanboxes = document.querySelectorAll(".drawingbox div");
+    cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true)));
+    const cleanbox = document.querySelectorAll(".drawingbox div");
+    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", erasethings));
+}
+
 clearButton.addEventListener("click", erased);
 
 darkButton.addEventListener("click", colors);
@@ -149,5 +166,7 @@ darkButton.addEventListener("click", colors);
 rainbow.addEventListener("click", rainbowcolor);
 
 lighten.addEventListener("click", lightens);
+
+eraser.addEventListener("click", erasing);
 
 
