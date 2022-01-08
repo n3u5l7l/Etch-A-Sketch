@@ -49,21 +49,6 @@ wholeBox.style.height= `${wholeBoxHeight}px`;
 
 bodys.appendChild(wholecontainer);
 
-function darkColor(e)
-{
-    if(e.buttons === 1 || e.buttons === 3)
-    {
-        this.style.backgroundColor="rgb(0,0,0)";
-    }
-}
-function colors(e)
-{
-    const cleanbox = document.querySelectorAll(".drawingbox div");
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", lightendark));
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));
-    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", darkColor));
-}
-
 const userGrid = parseInt(prompt("Grid Size? "));
 for (let i = 0; i < userGrid; i++)
 {
@@ -89,8 +74,29 @@ function erased(e)
 {
     const cleanbox = document.querySelectorAll(".drawingbox div");
     cleanbox.forEach(boxes=>boxes.style.backgroundColor="rgb(255,255,255)");
-    cleanbox.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true)));
+    cleanbox.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true))); 
+    //the cloneNode did a deep copy of all the boxes and the attribute within it except for eventListeners. So you
+    //basically deleted all the eventListeners
 
+}
+function darkColor(e)
+{
+    if(e.buttons === 1 || e.buttons === 3)
+    {
+        this.style.backgroundColor="rgb(0,0,0)";
+    }
+}
+function colors(e)
+{
+    const cleanboxes = document.querySelectorAll(".drawingbox div");
+    /*One way to remove listerners, more tedious
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", lightendark));
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));*/
+    cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true)));  //other way, 
+    const cleanbox = document.querySelectorAll(".drawingbox div");
+    //I created a new const because the original cleanboxes
+    //got replaced by deep cloning, so we need a new variable that ='s those cloned boxes
+    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", darkColor));
 }
 function rainbows(e)
 {
@@ -101,9 +107,13 @@ function rainbows(e)
 }
 function rainbowcolor(e)
 {
-    const cleanbox = document.querySelectorAll(".drawingbox div");
+    const cleanboxes = document.querySelectorAll(".drawingbox div");
+    /*
     cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", lightendark));
     cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));
+    */
+    cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true))); 
+    const cleanbox = document.querySelectorAll(".drawingbox div");
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", rainbows));
 
 }
@@ -118,13 +128,17 @@ function lightendark(e)
         let b = updatecolor[1];
         let g = updatecolor[2];
         this.style.backgroundColor= `rgb(${r-25.5},${b-25.5},${g-25.5})`;
+        console.log("UGH");
     }
 }
 function lightens(e)
 {
-    const cleanbox = document.querySelectorAll(".drawingbox div");
+    const cleanboxes = document.querySelectorAll(".drawingbox div");
+    /*
     cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));
+    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));*/
+    cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true))); 
+    const cleanbox = document.querySelectorAll(".drawingbox div");
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", lightendark));
 }
 
