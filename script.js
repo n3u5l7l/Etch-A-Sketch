@@ -20,9 +20,13 @@ wholecontainer.appendChild(drawingpad);
 drawingpad.appendChild(wholeBox);
 const buttons = document.createElement("button");
 drawingpad.appendChild(buttons);
-buttons.textContent="ERASE";
+buttons.textContent="CLEAR";
 drawingpad.setAttribute("style", "display:flex; justify-content:center;");
 buttons.style.alignSelf="flex-start";
+
+const rainbow = document.createElement("button");
+rainbow.textContent="Rainbow";
+drawingpad.appendChild(rainbow);
 
 wholecontainer.setAttribute("style", "display:flex; flex-direction:column;");
 wholeBox.setAttribute("style", "display:flex; flex-direction:column; -webkit-box-shadow: 0 0 10px #888888;");
@@ -30,12 +34,16 @@ const wholeBoxWidth = 600;
 const wholeBoxHeight = 600;
 wholeBox.style.width=`${wholeBoxWidth}px`;
 wholeBox.style.height= `${wholeBoxHeight}px`;
-//wholeBox.style.maxHeight="500px";
+
+
 bodys.appendChild(wholecontainer);
 
 function colors(e)
 {
-    this.style.backgroundColor="black";
+    if(e.buttons === 1 || e.buttons === 3)
+    {
+        this.style.backgroundColor="black";
+    }
 }
 
 const userGrid = parseInt(prompt("Grid Size? "));
@@ -51,7 +59,7 @@ for (let i = 0; i < userGrid; i++)
         const boxes = document.createElement("div");
         boxes.style.width=`${wholeBoxWidth/userGrid}px`;
         boxes.style.height=`${(wholeBoxHeight/userGrid)}px`;
-        boxes.addEventListener('mousemove', colors);
+        //boxes.addEventListener('mousemove', colors);
         boxcontainer.appendChild(boxes);
     }
     boxcontainer.style.minWidth="0";
@@ -64,4 +72,19 @@ function erased(e)
     cleanbox.forEach(boxes=>boxes.style.backgroundColor="white");
 
 }
+function rainbowcolor(e)
+{
+    function rainbows(e)
+    {
+        if(e.buttons === 1 || e.buttons === 3)
+        {
+            const randomColor = Math.floor(Math.random() * 1000)%256;
+            this.style.backgroundColor= `rgb(${Math.floor(Math.random() * 1000)%256}, ${Math.floor(Math.random() * 1000)%256}, ${Math.floor(Math.random() * 1000)%256})`;
+        }
+    }
+    const cleanbox = document.querySelectorAll(".drawingbox div");
+    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", rainbows));
+}
 buttons.addEventListener("click", erased);
+
+rainbow.addEventListener("click", rainbowcolor);
