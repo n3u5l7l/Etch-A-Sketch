@@ -16,10 +16,13 @@ titles.setAttribute("style", "display:flex; justify-content:center;")
 
 wholecontainer.appendChild(titles);
 wholecontainer.appendChild(drawingpad);
+wholecontainer.setAttribute("style", "display:flex; flex-direction:column;");
+bodys.appendChild(wholecontainer);
 
 const buttons = document.createElement("div");
 drawingpad.appendChild(buttons);
 drawingpad.appendChild(wholeBox);
+drawingpad.setAttribute("style", "display:flex; justify-content:center;");
 
 const clearButton = document.createElement("button");
 clearButton.textContent="CLEAR";
@@ -37,20 +40,15 @@ const eraser = document.createElement("button");
 eraser.textContent="Eraser";
 buttons.appendChild(eraser);
 
-drawingpad.setAttribute("style", "display:flex; justify-content:center;");
+
 buttons.style.display="flex";
 buttons.style.flexDirection="column";
 
-
-wholecontainer.setAttribute("style", "display:flex; flex-direction:column;");
 wholeBox.setAttribute("style", "display:flex; flex-direction:column; -webkit-box-shadow: 0 0 10px #888888;");
 const wholeBoxWidth = 600;
 const wholeBoxHeight = 600;
 wholeBox.style.width=`${wholeBoxWidth}px`;
 wholeBox.style.height= `${wholeBoxHeight}px`;
-
-
-bodys.appendChild(wholecontainer);
 
 const userGrid = parseInt(prompt("Grid Size? "));
 for (let i = 0; i < userGrid; i++)
