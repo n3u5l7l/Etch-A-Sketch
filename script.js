@@ -64,6 +64,7 @@ for (let i = 0; i < userGrid; i++)
         boxes.style.width=`${wholeBoxWidth/userGrid}px`;
         boxes.style.height=`${(wholeBoxHeight/userGrid)}px`;
         boxes.style.backgroundColor="rgb(255,255,255)";
+        boxes.draggable=false;
         //boxes.addEventListener('mousemove', colors);
         boxcontainer.appendChild(boxes);
     }
