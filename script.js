@@ -7,7 +7,7 @@ const drawingpad = document.createElement("div");
 drawingpad is a container that can be used to add things left/right
 side of the drawing box
 
-wholeBox is the flex container that include erase and the whole drawing
+wholeBox is the flex container that include the whole drawing
 grid
 */
 
@@ -49,6 +49,7 @@ const wholeBoxWidth = 600;
 const wholeBoxHeight = 600;
 wholeBox.style.width=`${wholeBoxWidth}px`;
 wholeBox.style.height= `${wholeBoxHeight}px`;
+wholeBox.draggable=false;
 
 const userGrid = parseInt(prompt("Grid Size? "));
 for (let i = 0; i < userGrid; i++)
