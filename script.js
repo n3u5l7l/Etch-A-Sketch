@@ -65,7 +65,13 @@ for (let i = 0; i < userGrid; i++)
         boxes.style.width=`${wholeBoxWidth/userGrid}px`;
         boxes.style.height=`${(wholeBoxHeight/userGrid)}px`;
         boxes.style.backgroundColor="rgb(255,255,255)";
-        boxes.draggable=false;
+        boxes.draggable=false; //I don't think this prevented anything
+        boxes.style.userSelect="none"; //This solved the actual problem detailed below
+        /*
+            Used userSelect here rather than draggable because draggable didnt stop the box from being selected which
+            still resulted in the unavailable icon that caused much frustration when trying to draw by clicking fast. As
+            when the grid boxes were constantly getting selected which prevents the events from happening
+        */
         //boxes.addEventListener('mousemove', colors);
         boxcontainer.appendChild(boxes);
     }
