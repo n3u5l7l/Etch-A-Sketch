@@ -3,6 +3,16 @@ const wholecontainer = document.createElement("div");
 const wholeBox = document.createElement("div");
 const titles = document.createElement("h1");
 const drawingpad = document.createElement("div"); 
+const slide = document.createElement("input");
+
+slide.setAttribute("type", "range");
+slide.setAttribute("min", "1");
+slide.setAttribute("max", "32");
+slide.setAttribute("value", "16");
+slide.classList.add("slider");
+slide.setAttribute("class", "slideclass");
+slide.setAttribute("style", " color: black;-webkit-appearance: none; margin-left:110px; width: 50%; height: 7px; background: #d3d3d3; transition: opacity .2s; -webkit-transition: .2s; opacity: 0.7; outline: none;");
+slide.setAttribute("onmouseover", "opacity:1s;");
 /* 
 drawingpad is a container that can be used to add things left/right
 side of the drawing box
@@ -43,6 +53,7 @@ buttons.appendChild(eraser);
 
 buttons.style.display="flex";
 buttons.style.flexDirection="column";
+buttons.style.justifyContent="space-evenly";
 
 wholeBox.setAttribute("style", "display:flex; flex-direction:column; -webkit-box-shadow: 0 0 10px #888888;");
 const wholeBoxWidth = 600;
