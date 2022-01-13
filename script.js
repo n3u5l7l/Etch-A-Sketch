@@ -1,8 +1,16 @@
 const bodys = document.querySelector("body");
+bodys.style.minWidth="100vh";
+bodys.style.minHeight="100vh";
+bodys.style.margin="0";
+bodys.style.padding="0";
+bodys.style.display="flex";
+
 const wholecontainer = document.createElement("div");
+bodys.appendChild(wholecontainer);
 const wholeBox = document.createElement("div");
 const titles = document.createElement("h1");
 const drawingpad = document.createElement("div"); 
+const footer = document.createElement("div");
 const slide = document.createElement("input");
 
 slide.setAttribute("type", "range");
@@ -13,26 +21,48 @@ slide.classList.add("slider");
 slide.setAttribute("class", "slideclass");
 slide.setAttribute("style", " color: black;-webkit-appearance: none; margin-left:110px; width: 50%; height: 7px; background: #d3d3d3; transition: opacity .2s; -webkit-transition: .2s; opacity: 0.7; outline: none;");
 slide.setAttribute("onmouseover", "opacity:1s;");
+
 /* 
 drawingpad is a container that can be used to add things left/right
 side of the drawing box
-
 wholeBox is the flex container that include the whole drawing
 grid
 */
 
-titles.textContent = "Etch-A-SKetch";
-titles.setAttribute("style", "display:flex; justify-content:center;")
+titles.textContent = "Etch-A-Sketch";
+titles.setAttribute("style", "display:flex; justify-content:center; margin-left:340px;")
 
 wholecontainer.appendChild(titles);
 wholecontainer.appendChild(drawingpad);
+wholecontainer.appendChild(footer);
 wholecontainer.setAttribute("style", "display:flex; flex-direction:column;");
-bodys.appendChild(wholecontainer);
+wholecontainer.style.width="100%";
+wholecontainer.style.minHeight="100%";
+
 
 const buttons = document.createElement("div");
 drawingpad.appendChild(buttons);
-drawingpad.appendChild(wholeBox);
+
+const drawingplusslide = document.createElement("div");
+drawingpad.appendChild(drawingplusslide);
+drawingplusslide.style.width="35%";
+drawingplusslide.style.display="flex";
+drawingplusslide.style.flexDirection="column";
+drawingplusslide.appendChild(wholeBox);
+const containingslide = document.createElement("div");
+drawingplusslide.appendChild(containingslide);
+containingslide.style.width="100%";
+containingslide.appendChild(slide);
+const slidenumber = document.createElement("div");
+containingslide.appendChild(slidenumber);
+slidenumber.setAttribute("class", "slideoutput");
+slidenumber.style.textAlign="center";
 drawingpad.setAttribute("style", "display:flex; justify-content:center;");
+drawingpad.style.height=`${80}%`;
+
+buttons.style.display="flex";
+buttons.style.flexDirection="column";
+buttons.style.gap="50px";
 
 const clearButton = document.createElement("button");
 clearButton.textContent="CLEAR";
@@ -49,45 +79,88 @@ buttons.appendChild(lighten);
 const eraser = document.createElement("button");
 eraser.textContent="Eraser";
 buttons.appendChild(eraser);
+const colorchoice = document.createElement("input");
+colorchoice.type="color";
+buttons.appendChild(colorchoice);
 
-
-buttons.style.display="flex";
-buttons.style.flexDirection="column";
-buttons.style.justifyContent="space-evenly";
+buttons.style.marginRight="250px";
 
 wholeBox.setAttribute("style", "display:flex; flex-direction:column; -webkit-box-shadow: 0 0 10px #888888;");
-const wholeBoxWidth = 600;
-const wholeBoxHeight = 600;
-wholeBox.style.width=`${wholeBoxWidth}px`;
-wholeBox.style.height= `${wholeBoxHeight}px`;
+wholeBox.style.width="100%";
+wholeBox.style.height= "100%";
+wholeBox.style.marginBottom="10px";
 wholeBox.draggable=false;
 
-const userGrid = parseInt(prompt("Grid Size? "));
+const slider = document.querySelector(".slideclass");
+const gridSize = document.querySelector(".slideoutput");
+let userGrid = slider.value;
+gridSize.innerHTML = slider.value + ' x ' + slider.value;
 for (let i = 0; i < userGrid; i++)
 {
     const boxcontainer = document.createElement("div");
     boxcontainer.classList.add("drawingbox");
     boxcontainer.setAttribute("style", "display:flex;");
+    boxcontainer.style.height=`${(wholeBox.clientHeight/userGrid)}px`;
+    boxcontainer.style.width=`${(wholeBox.cilentWidth)}px`;
     boxcontainer.style.alignItems="flex-start";
-    boxcontainer.style.whiteSpace="pre";
     for (let j = 0; j < userGrid; j++)
     {
         const boxes = document.createElement("div");
-        boxes.style.width=`${wholeBoxWidth/userGrid}px`;
-        boxes.style.height=`${(wholeBoxHeight/userGrid)}px`;
+        boxes.style.width=`${wholeBox.clientWidth/userGrid}px`;
+        boxes.style.height=`${(wholeBox.clientHeight/userGrid)}px`;
         boxes.style.backgroundColor="rgb(255,255,255)";
-        boxes.draggable=false; //I don't think this prevented anything
-        boxes.style.userSelect="none"; //This solved the actual problem detailed below
-        /*
-            Used userSelect here rather than draggable because draggable didnt stop the box from being selected which
-            still resulted in the unavailable icon that caused much frustration when trying to draw by clicking fast. As
-            when the grid boxes were constantly getting selected which prevents the events from happening
-        */
-        //boxes.addEventListener('mousemove', colors);
+        boxes.style.userSelect="none";
         boxcontainer.appendChild(boxes);
     }
-    boxcontainer.style.minWidth="0";
+    
     wholeBox.appendChild(boxcontainer);
+}
+
+slider.oninput = function() {
+    console.log(userGrid);
+    gridSize.innerHTML = this.value + ' x ' + this.value;
+    userGrid = this.value;
+    const removeChilds = (parent) => {
+        while (parent.lastChild) {
+            while (parent.lastChild.lastChild)
+            {
+                parent.lastChild.removeChild(parent.lastChild.lastChild);
+            }
+            parent.removeChild(parent.lastChild);
+        }
+    };
+    removeChilds(wholeBox);
+    for (let i = 0; i < userGrid; i++)
+    {
+        const boxcontainer = document.createElement("div");
+        boxcontainer.classList.add("drawingbox");
+        boxcontainer.setAttribute("style", "display:flex;");
+        boxcontainer.style.height=`${(wholeBox.clientHeight/userGrid)}px`;
+        boxcontainer.style.width=`${(wholeBox.cilentWidth)}px`;
+        boxcontainer.style.alignItems="flex-start";
+        for (let j = 0; j < userGrid; j++)
+        {
+            const boxes = document.createElement("div");
+            boxes.style.width=`${wholeBox.clientWidth/userGrid}px`;
+            boxes.style.height=`${(wholeBox.clientHeight/userGrid)}px`;
+            boxes.style.backgroundColor="rgb(255,255,255)";
+            //boxes.draggable=false;
+            boxes.style.userSelect="none";
+            /*
+                I used userSelect here rather than draggable because draggable 
+                only prevents an element from being dragged, so you can still
+                select the element, which is what caused unavailable mouse icon
+                that prevented users from drawing when clicked the mouse button
+                very fast since it kept selecting the grid boxes and is "attemp-
+                ting" to drag something unavailable I think since you can still
+                select the boxes. So I just prevented user from even able to
+                select stuff in the first place.
+            */
+            boxcontainer.appendChild(boxes);
+        }
+        
+        wholeBox.appendChild(boxcontainer);
+    }
 }
 
 function erased(e)
@@ -114,8 +187,6 @@ function colors(e)
     cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));*/
     cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true)));  //other way, 
     const cleanbox = document.querySelectorAll(".drawingbox div");
-    //I created a new const because the original cleanboxes
-    //got replaced by deep cloning, so we need a new variable that ='s those cloned boxes
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", darkColor));
 }
 function rainbows(e)
@@ -128,10 +199,6 @@ function rainbows(e)
 function rainbowcolor(e)
 {
     const cleanboxes = document.querySelectorAll(".drawingbox div");
-    /*
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", lightendark));
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));
-    */
     cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true))); 
     const cleanbox = document.querySelectorAll(".drawingbox div");
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", rainbows));
@@ -153,9 +220,6 @@ function lightendark(e)
 function lightens(e)
 {
     const cleanboxes = document.querySelectorAll(".drawingbox div");
-    /*
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", rainbows));
-    cleanbox.forEach(boxes=>boxes.removeEventListener("mousemove", darkColor));*/
     cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true))); 
     const cleanbox = document.querySelectorAll(".drawingbox div");
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", lightendark));
@@ -176,6 +240,21 @@ function erasing(e)
     cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", erasethings));
 }
 
+function coloringwithcolors(e)
+{
+    if (e.buttons===1 || e.buttons===3)
+    {
+        this.style.backgroundColor=`${colorchoice.value}`;
+    }
+}
+function coloring(e)
+{
+    const cleanboxes = document.querySelectorAll(".drawingbox div");
+    cleanboxes.forEach(boxes=>boxes.replaceWith(boxes.cloneNode(true))); 
+    const cleanbox = document.querySelectorAll(".drawingbox div");
+    cleanbox.forEach(boxes=>boxes.addEventListener("mousemove", coloringwithcolors));
+}
+
 clearButton.addEventListener("click", erased);
 
 darkButton.addEventListener("click", colors);
@@ -185,5 +264,7 @@ rainbow.addEventListener("click", rainbowcolor);
 lighten.addEventListener("click", lightens);
 
 eraser.addEventListener("click", erasing);
+
+colorchoice.addEventListener("input", coloring);
 
 
